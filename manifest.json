@@ -2,7 +2,7 @@
   "name": "FILTER KAAPI",
   "short_name": "FilterKaapi",
   "description": "An integrated notes taking, task management, habit tracker, and countdown timer web app with a focus on filtering and organization, presented with a rich coffee-colored theme.",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#18181b",
   "theme_color": "#f97316",
