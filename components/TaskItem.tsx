@@ -80,6 +80,9 @@ const DueDateDisplay: React.FC<{ dateString: string; completed: boolean }> = ({ 
 
 export const TaskItem: React.FC<TaskItemProps> = ({ task, dispatch, onEdit, onDragStart, onDrop, onDragOver }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [editingSubTaskId, setEditingSubTaskId] = useState<string | null>(null);
+  const [editedSubTaskText, setEditedSubTaskText] = useState('');
+  
   const priority = getPriorityInfo(task.filters);
   const priorityTextColor = getPriorityTextColor(task.filters);
   
@@ -94,6 +97,35 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, dispatch, onEdit, onDr
 
   const handleDelete = () => {
       dispatch({ type: 'DELETE_TASK', payload: task.id });
+  };
+
+  const handleStartEditSubTask = (sub: SubTask) => {
+    if (sub.completed) return; // Don't edit completed subtasks
+    setEditingSubTaskId(sub.id);
+    setEditedSubTaskText(sub.text);
+  };
+
+  const handleCancelEditSubTask = () => {
+    setEditingSubTaskId(null);
+    setEditedSubTaskText('');
+  };
+
+  const handleSaveSubTask = () => {
+    if (!editingSubTaskId) return;
+
+    const newText = editedSubTaskText.trim();
+    if (newText === '') {
+        handleCancelEditSubTask();
+        return;
+    }
+
+    const updatedSubTasks = task.subTasks.map(sub =>
+      sub.id === editingSubTaskId ? { ...sub, text: newText } : sub
+    );
+    const updatedTask: Task = { ...task, subTasks: updatedSubTasks };
+
+    dispatch({ type: 'UPDATE_ITEM', payload: updatedTask });
+    handleCancelEditSubTask();
   };
 
   return (
@@ -133,11 +165,34 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, dispatch, onEdit, onDr
             <div className="space-y-2">
               <h4 className="text-sm font-semibold">Sub-tasks:</h4>
               {task.subTasks.map(sub => (
-                <div key={sub.id} className="flex items-center">
-                  <button onClick={() => handleToggleSubTask(sub.id)} className="mr-3 flex-shrink-0">
+                <div key={sub.id} className="flex items-center gap-3">
+                  <button onClick={() => handleToggleSubTask(sub.id)} className="flex-shrink-0">
                      <CheckboxIcon checked={sub.completed} />
                   </button>
-                  <span className={`text-sm ${sub.completed ? 'line-through text-gray-500' : ''}`}>{sub.text}</span>
+                  {editingSubTaskId === sub.id ? (
+                     <input
+                      type="text"
+                      value={editedSubTaskText}
+                      onChange={(e) => setEditedSubTaskText(e.target.value)}
+                      onBlur={handleSaveSubTask}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleSaveSubTask();
+                        }
+                        if (e.key === 'Escape') handleCancelEditSubTask();
+                      }}
+                      autoFocus
+                      className="text-sm w-full bg-theme-light-bg dark:bg-theme-dark-bg p-1 rounded border border-theme-light-accent dark:border-theme-dark-accent outline-none"
+                    />
+                  ) : (
+                    <span 
+                      onClick={() => handleStartEditSubTask(sub)}
+                      className={`text-sm flex-grow ${sub.completed ? 'line-through text-gray-500 cursor-not-allowed' : 'cursor-pointer'}`}
+                    >
+                      {sub.text}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>

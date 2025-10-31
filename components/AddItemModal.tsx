@@ -23,6 +23,8 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, dis
   const [subTasks, setSubTasks] = useState<SubTask[]>([]);
   const [newSubTaskText, setNewSubTaskText] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const [editingSubTaskId, setEditingSubTaskId] = useState<string | null>(null);
+  const [editedSubTaskText, setEditedSubTaskText] = useState('');
   const titleInputRef = useRef<HTMLInputElement>(null);
   
   const isEditing = itemToEdit !== null;
@@ -54,6 +56,8 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, dis
         setDueDate('');
         setActiveTab(initialTab ?? ItemType.Task);
       }
+      setEditingSubTaskId(null);
+      setEditedSubTaskText('');
       setTimeout(() => titleInputRef.current?.focus(), 100);
     }
   }, [isOpen, itemToEdit, initialTab]);
@@ -96,6 +100,29 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, dis
   const handleDeleteSubTask = (id: string) => {
       setSubTasks(prev => prev.filter(sub => sub.id !== id));
   }
+
+  const handleStartEditSubTask = (sub: SubTask) => {
+    setEditingSubTaskId(sub.id);
+    setEditedSubTaskText(sub.text);
+  };
+
+  const handleCancelEditSubTask = () => {
+    setEditingSubTaskId(null);
+    setEditedSubTaskText('');
+  };
+
+  const handleSaveSubTask = () => {
+    if (!editingSubTaskId) return;
+    const newText = editedSubTaskText.trim();
+    if (newText) {
+        setSubTasks(prev =>
+            prev.map(sub =>
+                sub.id === editingSubTaskId ? { ...sub, text: newText } : sub
+            )
+        );
+    }
+    handleCancelEditSubTask();
+  };
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,11 +172,41 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, dis
             />
             <button type="button" onClick={handleAddSubTask} className="px-4 py-1 bg-theme-light-accent/80 dark:bg-theme-dark-accent/80 text-white rounded hover:bg-theme-light-accent dark:hover:bg-theme-dark-accent transition-colors text-sm">Add</button>
         </div>
-        <div className="mt-2 space-y-1 max-h-24 overflow-y-auto">
+        <div className="mt-2 space-y-1 max-h-24 overflow-y-auto subtle-scrollbar pr-1">
             {subTasks.map(sub => (
                 <div key={sub.id} className="flex items-center justify-between bg-theme-light-bg/70 dark:bg-theme-dark-bg/70 text-sm p-1.5 rounded">
-                    <span>{sub.text}</span>
-                    <button type="button" onClick={() => handleDeleteSubTask(sub.id)} className="p-1 text-gray-400 hover:text-red-500 rounded-full"><DeleteIcon/></button>
+                    {editingSubTaskId === sub.id ? (
+                        <input
+                            type="text"
+                            value={editedSubTaskText}
+                            onChange={(e) => setEditedSubTaskText(e.target.value)}
+                            onBlur={handleSaveSubTask}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleSaveSubTask();
+                                }
+                                if (e.key === 'Escape') {
+                                    e.preventDefault();
+                                    handleCancelEditSubTask();
+                                }
+                            }}
+                            autoFocus
+                            className="text-sm w-full bg-white dark:bg-theme-dark-bg py-0.5 px-1 rounded border border-theme-light-accent dark:border-theme-dark-accent outline-none"
+                        />
+                    ) : (
+                        <>
+                            <span 
+                                onClick={() => handleStartEditSubTask(sub)}
+                                className="flex-grow truncate pr-2 cursor-pointer"
+                            >
+                                {sub.text}
+                            </span>
+                            <button type="button" onClick={() => handleDeleteSubTask(sub.id)} className="p-1 text-gray-400 hover:text-red-500 rounded-full flex-shrink-0">
+                                <DeleteIcon/>
+                            </button>
+                        </>
+                    )}
                 </div>
             ))}
         </div>
