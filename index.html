@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FILTER KAAPI</title>
+    
+    <!-- PWA Additions -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#f97316" />
+    <link rel="apple-touch-icon" href="/vite.svg">
+    <!-- End PWA Additions -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      /* Hide scrollbar for Chrome, Safari and Opera */
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .hide-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              'heading': ['Roboto Slab', 'serif'],
+              'body': ['Roboto', 'sans-serif'],
+            },
+            colors: {
+              // Energetic Orange/Black/Grey Theme
+              'theme-light-bg': '#f4f4f5',       // zinc-100
+              'theme-light-text': '#27272a',     // zinc-800
+              'theme-light-card': '#ffffff',     // white
+              'theme-light-accent': '#f97316',   // orange-500
+              'theme-light-accent-hover': '#ea580c', // orange-600
+
+              'theme-dark-bg': '#18181b',        // zinc-900
+              'theme-dark-text': '#d4d4d8',      // zinc-300
+              'theme-dark-card': '#27272a',      // zinc-800
+              'theme-dark-accent': '#fb923c',    // orange-400
+              'theme-dark-accent-hover': '#f97316',  // orange-500
+            }
+          }
+        }
+      }
+    </script>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+</head>
+<body class="bg-theme-light-bg dark:bg-theme-dark-bg">
+    <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('service-worker.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
+        });
+      }
+    </script>
+</body>
+</html>
