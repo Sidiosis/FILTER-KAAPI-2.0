@@ -26,6 +26,27 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
       }
+      /* Subtle scrollbar for textareas */
+      .subtle-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .subtle-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .subtle-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #d4d4d8; /* zinc-300 */
+        border-radius: 3px;
+      }
+      .dark .subtle-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #52525b; /* zinc-600 */
+      }
+      .subtle-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: #d4d4d8 transparent; /* thumb and track color for Firefox */
+      }
+      .dark .subtle-scrollbar {
+        scrollbar-color: #52525b transparent;
+      }
     </style>
     <script>
       tailwind.config = {

@@ -188,7 +188,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, dis
           onChange={(e) => setDescription(e.target.value)}
           placeholder="More details about the task..."
           rows={3}
-          className="w-full p-2 rounded bg-theme-light-bg dark:bg-theme-dark-bg border border-theme-light-text/20 dark:border-theme-dark-text/20 focus:ring-1 focus:ring-theme-light-accent dark:focus:ring-theme-dark-accent outline-none"
+          className="w-full p-2 rounded bg-theme-light-bg dark:bg-theme-dark-bg border border-theme-light-text/20 dark:border-theme-dark-text/20 focus:ring-1 focus:ring-theme-light-accent dark:focus:ring-theme-dark-accent outline-none subtle-scrollbar"
         />
       </div>
       {renderSubTaskSection()}
@@ -219,7 +219,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ isOpen, onClose, dis
           onChange={(e) => setContent(e.target.value)}
           placeholder="Jot down your thoughts..."
           rows={5}
-          className="w-full p-2 rounded bg-theme-light-bg dark:bg-theme-dark-bg border border-theme-light-text/20 dark:border-theme-dark-text/20 focus:ring-1 focus:ring-theme-light-accent dark:focus:ring-theme-dark-accent outline-none"
+          className="w-full p-2 rounded bg-theme-light-bg dark:bg-theme-dark-bg border border-theme-light-text/20 dark:border-theme-dark-text/20 focus:ring-1 focus:ring-theme-light-accent dark:focus:ring-theme-dark-accent outline-none subtle-scrollbar"
         />
       </div>
       {renderFilters()}
